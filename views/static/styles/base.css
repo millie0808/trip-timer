@@ -1,0 +1,10 @@
+:root{
+    --calcite-ui-brand: #B2A9EF;
+    --calcite-ui-brand-press: #998DEA;
+    --calcite-ui-brand-hover: #998DEA;
+    --calcite-ui-foreground-current: #E6E6FA;
+}
+
+.none{
+    display: none;
+}

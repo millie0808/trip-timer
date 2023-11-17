@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>trip timer</title>
+        <script type="module" src=https://js.arcgis.com/calcite-components/1.10.0/calcite.esm.js></script>
+        <link rel="stylesheet" type="text/css" href=https://js.arcgis.com/calcite-components/1.10.0/calcite.css />
+        <link rel="stylesheet" type="text/css" href="/styles/base.css">
+        <link rel="stylesheet" type="text/css" href="/styles/add_site.css">
+    </head>
+    <body class="none">
+        <script type="module" src="/scripts/checkAddSite.js"></script>
+        <div id="title-container">
+            <span id="title" class="none">Where to go in
+                <span id="title_city-name"></span>
+            ? 🤩</span>
+        </div>
+        <div>Select the spots you would like to include for your visit.</div>
+        <div>
+            <calcite-combobox id="site-input" placeholder="Search a spot" placeholder-icon="apps" selection-mode="single" max-items="4">
+            </calcite-combobox>
+        </div>
+        <div>
+            <calcite-list id="site">
+                <!-- <calcite-list-item-group heading="Outdoor recreation"></calcite-list-item-group>
+                    <calcite-list-item label="Hiking trails" description="Designated routes for hikers to use." value="hiking-trails" closable>
+                        <div class="site-desc">ji</div>
+                    </calcite-list-item>
+                </calcite-list-item-group>
+                <calcite-list-item-group heading="Buildings">
+                    <calcite-list-item label="Waterfalls" description="Vertical drops from a river." closable value="waterfalls"></calcite-list-item>
+                </calcite-list-item-group> -->
+            </calcite-list>
+        </div>
+        <script type="module" src="/scripts/addSite.js"></script>    
+    </body>
+</html>

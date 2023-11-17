@@ -1,0 +1,11 @@
+calcite-input-date-picker{
+    inline-size: 500px;
+}
+
+calcite-combobox{
+    width: 500px;
+}
+
+.warning-text{
+    color: #DD524C;
+}

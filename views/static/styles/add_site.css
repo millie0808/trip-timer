@@ -1,0 +1,19 @@
+#title-container{
+    height: 22.5px;
+}
+
+calcite-combobox{
+    width: 500px;
+}
+
+calcite-list{
+    width: 500px;
+}
+
+.site-desc{
+    padding: 0 12px 12px 12px;
+    color: var(--calcite-ui-text-3);
+    font-size: var(--calcite-font-size--2);
+}
+
+  
