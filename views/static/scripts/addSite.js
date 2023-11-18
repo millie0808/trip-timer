@@ -243,6 +243,13 @@ const renderDeletingMapMarker = (siteName) => {
     GLOBAL_MAP.removeLayer(markerId);
     GLOBAL_MAP.removeSource(markerId);
 }
+const renderPageButton = () => {
+    const backBtn = document.querySelector('#back-btn');
+    backBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = '/trip/new';
+    })
+}
 
 
 // Controllers
@@ -297,5 +304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     })
     //
-    await MapController.ready(tripData.city, siteData.siteId);
+    renderPageButton();
+    //
+    // await MapController.ready(tripData.city, siteData.siteId);
 })

@@ -1,0 +1,36 @@
+<%- include('./partials/head.ejs') %>
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/@esri/calcite-components@1.0.0-beta.94/dist/calcite/calcite.esm.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@esri/calcite-components@1.0.0-beta.94/dist/calcite/calcite.css" />
+<link rel="stylesheet" type="text/css" href="/styles/base.css">
+<link rel="stylesheet" type="text/css" href="/styles/new_trip.css">
+
+<%- include('./partials/nav.ejs') %>
+
+<main class="mx-auto mt-12 w-full max-w-screen-xl flex-grow pt-12">
+    <div class="px-6">
+        <h2 class="mb-4 mt-5 text-center text-xl font-medium md:text-3xl">Plan your next adventure</h2>
+        <form action="" id="trip-form" class="mb-[5rem] mt-12 flex flex-col items-center justify-center gap-14">
+            <div id="city-container">
+                <div>Where do you want to go?</div>
+                <calcite-combobox id="city-input" placeholder="Search destination (Taiwan cities only)" selection-mode="single" max-items="7">
+                </calcite-combobox>
+                <span class="warning-text none">Where would you like going?</span>
+            </div>
+            <div id="date-container">
+                <div>When does your trip start?</div>
+                <calcite-input-date-picker range icon="depart" focus-trap-disabled>
+                </calcite-input-date-picker>
+                <div class="date warning-text none">Please select a valid date</div>
+            </div>
+            <calcite-button type="submit">Create my trip</calcite-button>
+        </form>
+    </div>
+</main>
+
+<%- include('./partials/footer.ejs') %>
+
+<script type="module" src="/scripts/newTrip.js"></script>
+
+</body>
+</html>

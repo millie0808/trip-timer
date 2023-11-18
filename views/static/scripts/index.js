@@ -1,0 +1,1 @@
+body.classList.remove('none');
