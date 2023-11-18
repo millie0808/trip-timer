@@ -22,9 +22,11 @@ app.get('/trip/site', (req, res) => {
 const cityAPI = require('./api/cityAPI');
 const tripAPI = require('./api/tripAPI');
 const siteAPI = require('./api/siteAPI');
+const tokenAPI = require('./api/tokenAPI');
 app.use('/', cityAPI);
 app.use('/', tripAPI);
 app.use('/', siteAPI);
+app.use('/', tokenAPI);
 
 app.listen(port, () => {
     console.log(`應用程序運行在 http://localhost:${port}`);

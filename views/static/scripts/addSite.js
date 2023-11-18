@@ -28,6 +28,11 @@ const deleteSiteFromStorage = (siteName) => {
     localStorage.setItem('siteData', JSON.stringify({...siteData, 'siteId': newSiteIdData}));
     console.log('已從列表中移除數字:', newSiteIdData);
 }
+const fetchTB = async () => {
+    const response = await fetch('/api/t/b', { method: 'POST' });
+    const tb = await response.json();
+    return tb;
+}
 
 // Views
 const renderSiteInput = (sites) => {
@@ -54,6 +59,12 @@ const renderSiteInput = (sites) => {
         siteItem.setAttribute('text-label', site.name);
         siteItemGroup.appendChild(siteItem);
     });
+    //
+    setTimeout(() => {
+        const shadow = siteInput.shadowRoot;
+        const parentDiv = shadow.querySelector('div[role=combobox]');
+        observerForClosingSiteInput.observe(parentDiv, { attributes: true, attributeOldValue: true });
+    }, 200);
 }
 const renderTitle = (cityName) => {
     const titleCitySpan = document.querySelector('#title_city-name');
@@ -109,7 +120,7 @@ const addToList = (siteId) => {
     observerForDeletingSite.observe(siteEle, { attributes: true });
     siteGroup.appendChild(siteEle);
 }
-const removeValueInInput = (siteName) => {
+const removeValueInInput = () => {
     setTimeout(() => {
         const siteInput = document.querySelector('#site-input');
         const shadow = siteInput.shadowRoot;
@@ -117,9 +128,13 @@ const removeValueInInput = (siteName) => {
         const childDiv = parentDiv.querySelector('div[class="grid-input"]');
         const grandchildDiv = childDiv.querySelector('.input-wrap.input-wrap--single');
         const textEle = grandchildDiv.querySelector('span');
-        grandchildDiv.removeChild(textEle);
+        if(textEle){
+            grandchildDiv.removeChild(textEle);
+        }
         const inputEle = grandchildDiv.querySelector('input');
-        inputEle.classList.remove("input--hidden");
+        if(inputEle){
+            inputEle.classList.remove("input--hidden");
+        }
         const buttonEle = parentDiv.querySelector('button');
         if (buttonEle && buttonEle.parentNode === parentDiv) {
             parentDiv.removeChild(buttonEle);
@@ -135,6 +150,17 @@ const observerForDeletingSite = new MutationObserver(mutationsList => {
             deleteSiteFromStorage(siteNameDeleted);
         }
     }
+});
+const observerForClosingSiteInput = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') {
+            const ele = mutation.target;
+            const isOpened = ele.getAttribute('aria-expanded');
+            if(isOpened === 'false'){
+                removeValueInInput();
+            }
+        }
+    });
 });
 const enableSiteItemDeleted = (siteName) => {
     const siteItemDeleted = document.querySelector(`calcite-combobox-item[text-label='${siteName}']`);
@@ -160,6 +186,16 @@ class SiteController {
         renderSite(siteData.siteId);
     }
 }
+class MapController {
+    static async ready(){
+        const TB = await fetchTB();
+        mapboxgl.accessToken = TB;
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11'
+        });
+    }
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tripData = JSON.parse(localStorage.getItem('tripData'));
@@ -183,9 +219,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             addSiteToStorage(siteSelected);
             disableSiteItemSelected([siteSelected.id]);
             addToList(siteSelected.id);
-            removeValueInInput(siteSelected.name);
+            removeValueInInput();
         }
     })
     //
-    
+    // await MapController.ready();
 })

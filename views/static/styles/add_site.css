@@ -16,4 +16,7 @@ calcite-list{
     font-size: var(--calcite-font-size--2);
 }
 
-  
+#map{
+    width: 800px;
+    height: 600px;
+}

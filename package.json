@@ -1,7 +1,6 @@
 {
   "name": "trip-timer",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +14,8 @@
     "nodemon": "^3.0.1",
     "path": "^0.12.7",
     "sequelize": "^6.35.0"
-  }
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
 }

@@ -11,7 +11,7 @@ fetch('/api/cities')
         const tripData = JSON.parse(localStorage.getItem('tripData'));
         if(tripData){
             // Taiwan 的部分待修改
-            const cityItem = cityInput.querySelector(`calcite-combobox-item[text-label='${tripData.city.name}, Taiwan']`)[0];
+            const cityItem = cityInput.querySelector(`calcite-combobox-item[text-label='${tripData.city.name}, Taiwan']`);
             cityItem.setAttribute('selected', '');
             datePicker.value = tripData.date;
         }
