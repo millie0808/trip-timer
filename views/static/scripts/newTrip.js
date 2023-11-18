@@ -4,7 +4,7 @@ fetch('/api/cities')
         const cityInput = document.querySelector('#city-input');
         cityData.forEach(city => {
             const cityItem = document.createElement('calcite-combobox-item');
-            cityItem.setAttribute('value', city.name_eng+', '+city.id+', '+city.country_eng);
+            cityItem.setAttribute('value', `{"id":${city.id}, "name":"${city.name_eng}", "lat":${city.lat}, "lng":${city.lng}}`);
             cityItem.setAttribute('text-label', city.name_eng+', '+city.country_eng);
             cityInput.appendChild(cityItem);
         });
@@ -37,10 +37,13 @@ tripForm.addEventListener('submit', async (event) => {
         }
         return false;
     }
+    const cityInputValue = JSON.parse(cityInput.value);
     localStorage.setItem('tripData', JSON.stringify({
         city: {
-            id: parseInt(cityInput.value.split(', ')[1], 10),
-            name: cityInput.value.split(', ')[0]
+            id: cityInputValue.id,
+            name: cityInputValue.name,
+            lat: cityInputValue.lat,
+            lng: cityInputValue.lng
         },
         date: datePicker.value
     }));

@@ -1,5 +1,6 @@
 let GLOBAL_SITES = null;
 let GLOBAL_SITE_GROUP_LIST = {};
+let GLOBAL_MAP = null;
 const GLOBAL_SITE_TAG_LIST = { 1:'景點', 2:'餐廳', 3:'住宿' };
 
 // Models
@@ -36,6 +37,24 @@ const fetchTB = async () => {
     const tb = await response.json();
     return tb;
 }
+const getMapFeature = (sitedId) => {
+    const site = GLOBAL_SITES.find(site => site.id === sitedId);
+    const feature = [
+        {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [
+                    site.lng, site.lat
+                ]
+            },
+            'properties': {
+                'title': site.name
+            }
+        }
+    ];
+    return feature
+}
 
 // Views
 const renderSiteInput = (sites) => {
@@ -67,7 +86,7 @@ const renderSiteInput = (sites) => {
         const shadow = siteInput.shadowRoot;
         const parentDiv = shadow.querySelector('div[role=combobox]');
         observerForClosingSiteInput.observe(parentDiv, { attributes: true, attributeOldValue: true });
-    }, 200);
+    }, 300);
 }
 const renderTitle = (cityName) => {
     const titleCitySpan = document.querySelector('#title_city-name');
@@ -151,6 +170,7 @@ const observerForDeletingSite = new MutationObserver(mutationsList => {
             const siteNameDeleted = siteDeleted.getAttribute('label');
             enableSiteItemDeleted(siteNameDeleted);
             deleteSiteFromStorage(siteNameDeleted);
+            renderDeletingMapMarker(siteNameDeleted);
         }
     }
 });
@@ -168,6 +188,60 @@ const observerForClosingSiteInput = new MutationObserver(mutations => {
 const enableSiteItemDeleted = (siteName) => {
     const siteItemDeleted = document.querySelector(`calcite-combobox-item[text-label='${siteName}']`);
     siteItemDeleted.removeAttribute('disabled');
+}
+const renderMap = (TB, city, siteIdList) => {
+    mapboxgl.accessToken = TB;
+    GLOBAL_MAP = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/millie000/clp3so68d00fj01pwcmi1al20/draft',
+        center: [city.lng, city.lat],
+        zoom: 9.5
+    });
+    GLOBAL_MAP.on('load', () => {
+        GLOBAL_MAP.loadImage(
+            '/images/map-markers/purple-marker.png',
+            (error, image) => {
+                if (error) throw error;
+                GLOBAL_MAP.addImage('purple-marker', image);
+            }
+        );
+        renderMapMarker(siteIdList);
+    })
+}
+const renderMapMarker = (siteIdList) => {
+    // Add points
+    siteIdList.forEach(id => {
+        const markerId = 'siteMarker'+id.toString();
+        GLOBAL_MAP.addSource(markerId, {
+            'type': 'geojson',
+            'data': {
+                'type': 'FeatureCollection',
+                'features': getMapFeature(id)
+            }
+        })
+        GLOBAL_MAP.addLayer({
+            'id': markerId,
+            'type': 'symbol',
+            'source': markerId,
+            'layout': {
+                'icon-image': 'purple-marker',
+                // get the title name from the source's "title" property
+                'text-field': ['get', 'title'],
+                'text-font': [
+                    'Open Sans Semibold',
+                    'Arial Unicode MS Bold'
+                ],
+                'text-offset': [0, 1.25],
+                'text-anchor': 'top'
+            }
+        });
+    })
+}
+const renderDeletingMapMarker = (siteName) => {
+    const siteId = GLOBAL_SITES.find(site => site.name === siteName).id;
+    const markerId = 'siteMarker'+siteId.toString();
+    GLOBAL_MAP.removeLayer(markerId);
+    GLOBAL_MAP.removeSource(markerId);
 }
 
 
@@ -190,13 +264,9 @@ class SiteController {
     }
 }
 class MapController {
-    static async ready(){
+    static async ready(city, siteIdList){
         const TB = await fetchTB();
-        mapboxgl.accessToken = TB;
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11'
-        });
+        renderMap(TB, city, siteIdList);
     }
 }
 
@@ -223,8 +293,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             disableSiteItemSelected([siteSelected.id]);
             addToList(siteSelected.id);
             removeValueInInput();
+            renderMapMarker([siteSelected.id]);
         }
     })
     //
-    // await MapController.ready();
+    await MapController.ready(tripData.city, siteData.siteId);
 })
