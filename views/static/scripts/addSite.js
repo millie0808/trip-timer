@@ -24,7 +24,10 @@ const addSiteToStorage = (siteSelected) => {
 const deleteSiteFromStorage = (siteName) => {
     const siteData = JSON.parse(localStorage.getItem('siteData'));
     const siteIdToBeDeleted = GLOBAL_SITES.find(site => site.name === siteName).id;
-    const newSiteIdData = siteData.siteId.filter(id => id !== siteIdToBeDeleted);
+    let newSiteIdData = siteData.siteId.filter(id => id !== siteIdToBeDeleted);
+    if(newSiteIdData.length == 1){
+        newSiteIdData = [];
+    }
     localStorage.setItem('siteData', JSON.stringify({...siteData, 'siteId': newSiteIdData}));
     console.log('已從列表中移除數字:', newSiteIdData);
 }
