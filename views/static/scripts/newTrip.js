@@ -30,14 +30,23 @@ const tripForm = document.querySelector('#trip-form');
 tripForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     // 檢查資料
-    if(!cityInput.value || !datePicker.value[0] || !datePicker.value[1]){
+    if(!cityInput.value || !datePicker.value){
         if(!cityInput.value){
             cityWarning.classList.remove('none');
         }
-        if(!cityInput.value){
-            cityWarning.classList.remove('none');
+        if(!datePicker.value){
+            dateWarning.classList.remove('none');
+        }
+        else if(!datePicker.value[0] || !datePicker.value[1]){
+            dateWarning.classList.remove('none');
         }
         return false;
+    }
+    if(datePicker.value){
+        if(!datePicker.value[0] || !datePicker.value[1]){
+            dateWarning.classList.remove('none');
+            return false;
+        }
     }
     const cityInputValue = JSON.parse(cityInput.value);
     localStorage.setItem('tripData', JSON.stringify({
@@ -54,7 +63,6 @@ tripForm.addEventListener('submit', async (event) => {
 
 cityInput.addEventListener('calciteComboboxChange', () => {
     cityWarning.classList.add('none');
-    console.log(cityInput.value);
 })
 
 datePicker.addEventListener('calciteInputDatePickerChange', () => {

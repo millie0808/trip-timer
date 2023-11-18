@@ -1,1 +1,1 @@
-body.classList.remove('none');
+document.querySelector('body').classList.remove('none');
