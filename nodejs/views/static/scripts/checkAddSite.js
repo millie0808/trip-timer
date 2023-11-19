@@ -5,7 +5,7 @@ if(!tripData){
     window.location.href = '/trip/new';
 }
 else{
-    document.body.classList.remove('none');
+    document.querySelector('body').classList.remove('none');
     if(!siteData){
         localStorage.setItem('siteData', JSON.stringify({'cityId': tripData.city.id}));
     }

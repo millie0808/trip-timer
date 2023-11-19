@@ -1,5 +1,3 @@
-document.querySelector('body').classList.remove('none');
-
 fetch('/api/cities')
     .then(response => response.json())
     .then(cityData => {

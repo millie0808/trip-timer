@@ -24,11 +24,11 @@ const City = db.define('City', {
             allowNull: false,
         },
         lat: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.FLOAT(17, 14),
             allowNull: false,
         },
         lng: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.FLOAT(17, 14),
             allowNull: false,
         }
     }, {
