@@ -240,6 +240,9 @@ const renderMapMarker = (siteIdList) => {
             'source': markerId,
             'layout': {
                 'icon-image': 'purple-marker',
+                // icon always display
+                'icon-allow-overlap': true,
+                'text-optional': true,
                 // get the title name from the source's "title" property
                 'text-field': ['get', 'title'],
                 'text-font': [
@@ -264,19 +267,19 @@ const renderPageButton = () => {
         event.preventDefault();
         window.location.href = '/trip/new';
     })
-    const nextBtn = document.querySelector('#next-btn');
-    nextBtn.addEventListener('click', async (event) => {
-        event.preventDefault();
-        const tripData = JSON.parse(localStorage.getItem('tripData'));
-        const siteData = JSON.parse(localStorage.getItem('siteData'));
-        if(!siteData.siteId || siteData.siteId == []){
-            showWarningText();
-        }
-        else{
-            const newTrip = await createNewTrip(tripData, siteData);
-            window.location.href = '/trip/'+newTrip.number;
-        }
-    })
+    // const nextBtn = document.querySelector('#next-btn');
+    // nextBtn.addEventListener('click', async (event) => {
+    //     event.preventDefault();
+    //     const tripData = JSON.parse(localStorage.getItem('tripData'));
+    //     const siteData = JSON.parse(localStorage.getItem('siteData'));
+    //     if(!siteData.siteId || siteData.siteId == []){
+    //         showWarningText();
+    //     }
+    //     else{
+    //         const newTrip = await createNewTrip(tripData, siteData);
+    //         window.location.href = '/trip/'+newTrip.number;
+    //     }
+    // })
 }
 const showWarningText = () => {
     const warningText = document.querySelector('.warning-text');
@@ -338,12 +341,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             disableSiteItemSelected([siteSelected.id]);
             addToList(siteSelected.id);
             removeValueInInput();
-            // renderMapMarker([siteSelected.id]);
+            renderMapMarker([siteSelected.id]);
             hideWarningText();
         }
     })
     //
     renderPageButton();
     //
-    // await MapController.ready(tripData.city, siteData.siteId);
+    await MapController.ready(tripData.city, siteData.siteId);
 })
