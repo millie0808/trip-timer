@@ -30,9 +30,9 @@ class TripController {
             if (!newTripJSON || !newTripJSON.date[0] || !newTripJSON.date[1] || !newTripJSON.city) {
                 throw new Error('Bad Request. Please provide valid data.');
             }
-            const cityId = await cityController.mapToCityId(newTripJSON.city);
             const tripData = {
-                city_id: cityId,
+                city_id: newTripJSON.city,
+                number: generateTripNumber(),
                 start_date: newTripJSON.date[0],
                 end_date: newTripJSON.date[1]
             }
@@ -48,3 +48,12 @@ class TripController {
 const tripController = new TripController();
 
 module.exports = tripController;
+
+function generateTripNumber() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const randomSuffix = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+    return `${year}${month}${day}${randomSuffix}`;
+}

@@ -6,11 +6,11 @@ dotenv.config();
 const mapboxToken = process.env.MAPBOX_TOKEN;
 const googleMapToken = process.env.GOOGLE_MAP_TOKEN;
 
-tokenAPI.post('/api/t/b', async (req, res) => {
+tokenAPI.get('/api/t/b', async (req, res) => {
     res.status(200).json(mapboxToken);
 })
 
-tokenAPI.post('/api/t/g', async (req, res) => {
+tokenAPI.get('/api/t/g', async (req, res) => {
     res.status(200).json(googleMapToken);
 })
 

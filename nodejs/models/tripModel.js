@@ -23,25 +23,10 @@ const Trip = db.define('Trip', {
         }
     }, {
         tableName: 'trip',
-        timestamps: false,
-        hooks: {
-            beforeCreate: (trip) => {
-                // 在創建訂單之前生成編號
-                trip.number = generateTripNumber();
-            },
-        }
+        timestamps: false
     }
 );
 Trip.belongsTo(City, { foreignKey: 'city_id', as: 'City' });
-
-function generateTripNumber() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const randomSuffix = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
-    return `${year}${month}${day}${randomSuffix}`;
-}
 
 module.exports = Trip;
   

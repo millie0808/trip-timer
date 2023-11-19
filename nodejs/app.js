@@ -19,6 +19,9 @@ app.get('/trip/new', (req, res) => {
 app.get('/trip/site', (req, res) => {
     res.render('templates/add_site')
 })
+app.get('/trip/:tripNumber', (req, res) => {
+    res.render('templates/trip')
+})
 
 const cityAPI = require('./api/cityAPI');
 const tripAPI = require('./api/tripAPI');

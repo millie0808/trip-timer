@@ -33,7 +33,7 @@ const deleteSiteFromStorage = (siteName) => {
     console.log('已從列表中移除數字:', newSiteIdData);
 }
 const fetchTB = async () => {
-    const response = await fetch('/api/t/b', { method: 'POST' });
+    const response = await fetch('/api/t/b');
     const tb = await response.json();
     return tb;
 }
@@ -54,6 +54,21 @@ const getMapFeature = (sitedId) => {
         }
     ];
     return feature
+}
+const createNewTrip = async (tripData, siteData) => {
+    const response = await fetch('/api/trip', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            'city': tripData.city.id,
+            'date': tripData.date,
+            'sites': siteData.siteId
+        })
+    });
+    const newTrip = await response.json();
+    return newTrip.trip
 }
 
 // Views
@@ -249,6 +264,29 @@ const renderPageButton = () => {
         event.preventDefault();
         window.location.href = '/trip/new';
     })
+    const nextBtn = document.querySelector('#next-btn');
+    nextBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const tripData = JSON.parse(localStorage.getItem('tripData'));
+        const siteData = JSON.parse(localStorage.getItem('siteData'));
+        if(!siteData.siteId || siteData.siteId == []){
+            showWarningText();
+        }
+        else{
+            const newTrip = await createNewTrip(tripData, siteData);
+            window.location.href = '/trip/'+newTrip.number;
+        }
+    })
+}
+const showWarningText = () => {
+    const warningText = document.querySelector('.warning-text');
+    warningText.classList.remove('none');
+}
+const hideWarningText = () => {
+    const warningText = document.querySelector('.warning-text');
+    if(warningText){
+        warningText.classList.add('none');
+    }
 }
 
 
@@ -300,7 +338,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             disableSiteItemSelected([siteSelected.id]);
             addToList(siteSelected.id);
             removeValueInInput();
-            renderMapMarker([siteSelected.id]);
+            // renderMapMarker([siteSelected.id]);
+            hideWarningText();
         }
     })
     //

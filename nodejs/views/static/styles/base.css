@@ -8,3 +8,7 @@
 .none{
     display: none;
 }
+
+.warning-text{
+    color: #DD524C;
+}

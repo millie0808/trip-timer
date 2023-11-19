@@ -2,6 +2,7 @@ const express = require('express');
 const tripAPI = express.Router();
 
 const tripController = require('../controllers/tripController');
+const scheduleController = require('../controllers/scheduleController');
 
 // Create new trip
 tripAPI.post('/api/trip', async (req, res) => {
@@ -9,10 +10,12 @@ tripAPI.post('/api/trip', async (req, res) => {
         const newTripJSON = req.body;
         const newTripData = await tripController.mapToTripData(newTripJSON);
         const newTrip = await tripController.createTrip(newTripData);
+        const newScheduleDataList = await scheduleController.mapToScheduleData(newTripJSON, newTrip.id);
+        await scheduleController.createSchedule(newScheduleDataList);
         // 成功的回應
         res.status(201).json({
             ok: true,
-            id: newTrip.id
+            trip: newTrip
         });
     }
     catch(error){
