@@ -3,8 +3,3 @@
     color: var(--calcite-ui-text-3);
     font-size: var(--calcite-font-size--2);
 }
-
-#map{
-    width: 100%;
-    height: 100%;
-}

@@ -40,15 +40,15 @@
                                 </div>
                                 <p class="mb-6 text-base text-blue-gray-300 md:mt-5 md:text-start md:text-lg">
                                     Select the spots you would like to include for your visit,
-                                    <br>or custmize.
+                                    <!-- <br>or custmize. -->
                                 </p>
                             </div>
                             <div>
-                                <calcite-combobox id="site-input" placeholder="Search a spot" placeholder-icon="apps" selection-mode="single" max-items="4">
+                                <calcite-combobox id="site-input" placeholder="Search a spot" placeholder-icon="apps" selection-mode="single" max-items="7">
                                 </calcite-combobox>
-                                <calcite-list id="site">
-                                </calcite-list>
-                                <div class="none warning-text">Please select at least one spot</div>
+                                <div id="day-block-container"></div>
+                                <div id="warning-day" class="none warning-text"></div>
+                                <div id="warning-site" class="none warning-text"></div>
                             </div>
                         </div>
                     </div>

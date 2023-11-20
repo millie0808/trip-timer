@@ -1,6 +1,7 @@
 let GLOBAL_SITES = null;
 let GLOBAL_SITE_GROUP_LIST = {};
 let GLOBAL_MAP = null;
+let GLOBAL_DATES = null;
 const GLOBAL_SITE_TAG_LIST = { 1:'景點', 2:'餐廳', 3:'住宿' };
 
 // Models
@@ -9,28 +10,25 @@ const fetchSites = async (cityId) => {
     const sites = await response.json();
     return sites;
 }
-const addSiteToStorage = (siteSelected) => {
-    const siteData = JSON.parse(localStorage.getItem('siteData'));
-    let siteIdData = siteData.siteId || [];
-    const siteIdToBeStorage = siteSelected.id;
-    if (!siteIdData.includes(siteIdToBeStorage)) {
-        siteIdData.push(siteIdToBeStorage);
-        localStorage.setItem('siteData', JSON.stringify({ ...siteData, 'siteId': siteIdData}));
-        console.log('已加入數字到列表中:', siteIdData);
+const addSiteToStorage = (siteSelected, day) => {
+    let siteData = JSON.parse(localStorage.getItem('siteData'));
+    if (Object.keys(siteData.site).includes(day.toString())) {
+        siteData.site[day].push(siteSelected.id);
+    } else {
+        siteData.site[day] = [siteSelected.id];
     }
-    else{
-        console.log('此景點已選取，無法重複添加。')
-    }
+    localStorage.setItem('siteData', JSON.stringify(siteData));
 }
-const deleteSiteFromStorage = (siteName) => {
-    const siteData = JSON.parse(localStorage.getItem('siteData'));
+const deleteSiteFromStorage = (siteName, day) => {
+    let siteData = JSON.parse(localStorage.getItem('siteData'));
     const siteIdToBeDeleted = GLOBAL_SITES.find(site => site.name === siteName).id;
-    let newSiteIdData = siteData.siteId.filter(id => id !== siteIdToBeDeleted);
-    if(newSiteIdData.length == 1){
-        newSiteIdData = [];
+    if (Object.keys(siteData.site).includes(day.toString())) {
+        const indexToDelete = siteData.site[day].indexOf(siteIdToBeDeleted);
+        if (indexToDelete !== -1) {
+            siteData.site[day].splice(indexToDelete, 1);
+        }
     }
-    localStorage.setItem('siteData', JSON.stringify({...siteData, 'siteId': newSiteIdData}));
-    console.log('已從列表中移除數字:', newSiteIdData);
+    localStorage.setItem('siteData', JSON.stringify(siteData));
 }
 const fetchTB = async () => {
     const response = await fetch('/api/t/b');
@@ -64,11 +62,26 @@ const createNewTrip = async (tripData, siteData) => {
         body: JSON.stringify({
             'city': tripData.city.id,
             'date': tripData.date,
-            'sites': siteData.siteId
+            'site': siteData.site
         })
     });
     const newTrip = await response.json();
     return newTrip.trip
+}
+const getDate = (dateData) => {
+    const startDate = dateData[0];
+    const endDate = dateData[1];
+    const dateArray = [];
+    let currentDate = new Date(startDate);
+    while (currentDate <= new Date(endDate)) {
+        dateArray.push(new Date(currentDate).toISOString().slice(0, 10)); // 將日期格式化為 YYYY-MM-DD
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dateArray;
+}
+const getDayBlockOpened = () => {
+    const allDayBlock = document.querySelectorAll('calcite-block');
+    return Array.from(allDayBlock).filter(dayBlock => dayBlock.hasAttribute('open'));
 }
 
 // Views
@@ -122,32 +135,19 @@ const disableSiteItemSelected = (siteIdList) => {
     })
 }
 const renderSite = (sitesInStorage) => {
-    const siteDiv = document.querySelector('#site');
-    Object.values(GLOBAL_SITE_TAG_LIST).forEach(tagName => {
-        const siteGroup = document.createElement('calcite-list-item-group');
-        siteGroup.setAttribute('heading', tagName);
-        siteDiv.appendChild(siteGroup);
-    })
-    // 儲存 GLOBAL_SITE_GROUP_LIST (內含elements)
-    const siteGroups = siteDiv.querySelectorAll('calcite-list-item-group');
-    siteGroups.forEach(group => {
-        const tagName = group.getAttribute('heading');
-        if (!GLOBAL_SITE_GROUP_LIST[tagName]) {
-            GLOBAL_SITE_GROUP_LIST[tagName] = [];
-        }
-        GLOBAL_SITE_GROUP_LIST[tagName].push(group);
-    });
     // 顯示 local storage siteData 紀錄
-    if(sitesInStorage != []){
-        sitesInStorage.forEach(id => {
-            addToList(id);
-        })
+    if(sitesInStorage != {}){
+        for(const day in sitesInStorage){
+            sitesInStorage[day].forEach(siteId => {
+                addToList(siteId, day);
+            })
+        }
     }
 }
-const addToList = (siteId) => {
+const addToList = (siteId, day) => {
     const site = GLOBAL_SITES.filter(site => [siteId].includes(site.id))[0];
     const tagName = GLOBAL_SITE_TAG_LIST[site.tag_id];
-    const siteGroup = GLOBAL_SITE_GROUP_LIST[tagName][0];
+    const siteGroup = document.querySelector(`.day-${day}-group[heading='${tagName}']`);
     const siteEle = document.createElement('calcite-list-item');
     siteEle.setAttribute('label', site.name);
     if(site.address != 'null'){
@@ -184,7 +184,9 @@ const observerForDeletingSite = new MutationObserver(mutationsList => {
             const siteDeleted = mutation.target;
             const siteNameDeleted = siteDeleted.getAttribute('label');
             enableSiteItemDeleted(siteNameDeleted);
-            deleteSiteFromStorage(siteNameDeleted);
+            const dayBlcokOpened = getDayBlockOpened()[0];
+            const day = parseInt(dayBlcokOpened.getAttribute('id').match(/\d+/)[0]);
+            deleteSiteFromStorage(siteNameDeleted, day);
             renderDeletingMapMarker(siteNameDeleted);
         }
     }
@@ -204,7 +206,7 @@ const enableSiteItemDeleted = (siteName) => {
     const siteItemDeleted = document.querySelector(`calcite-combobox-item[text-label='${siteName}']`);
     siteItemDeleted.removeAttribute('disabled');
 }
-const renderMap = (TB, city, siteIdList) => {
+const renderMap = (TB, city, siteData) => {
     mapboxgl.accessToken = TB;
     GLOBAL_MAP = new mapboxgl.Map({
         container: 'map',
@@ -220,7 +222,10 @@ const renderMap = (TB, city, siteIdList) => {
                 GLOBAL_MAP.addImage('purple-marker', image);
             }
         );
-        renderMapMarker(siteIdList);
+        // 需修改
+        for(const day in siteData){
+            renderMapMarker(siteData[day]);
+        }
     })
 }
 const renderMapMarker = (siteIdList) => {
@@ -267,29 +272,68 @@ const renderPageButton = () => {
         event.preventDefault();
         window.location.href = '/trip/new';
     })
-    // const nextBtn = document.querySelector('#next-btn');
-    // nextBtn.addEventListener('click', async (event) => {
-    //     event.preventDefault();
-    //     const tripData = JSON.parse(localStorage.getItem('tripData'));
-    //     const siteData = JSON.parse(localStorage.getItem('siteData'));
-    //     if(!siteData.siteId || siteData.siteId == []){
-    //         showWarningText();
-    //     }
-    //     else{
-    //         const newTrip = await createNewTrip(tripData, siteData);
-    //         window.location.href = '/trip/'+newTrip.number;
-    //     }
-    // })
+    const nextBtn = document.querySelector('#next-btn');
+    nextBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const tripData = JSON.parse(localStorage.getItem('tripData'));
+        const siteData = JSON.parse(localStorage.getItem('siteData'));
+        if(!siteData.site || siteData.site == {}){
+            showWarningText('Please select at least one spot', 'warning-site');
+        }
+        else{
+            const newTrip = await createNewTrip(tripData, siteData);
+            window.location.href = '/trip/'+newTrip.number;
+        }
+    })
 }
-const showWarningText = () => {
-    const warningText = document.querySelector('.warning-text');
-    warningText.classList.remove('none');
+const showWarningText = (warningText, warningDivId) => {
+    const warningDiv = document.querySelector(`#${warningDivId}`);
+    warningDiv.textContent = warningText;
+    warningDiv.classList.remove('none');
 }
-const hideWarningText = () => {
-    const warningText = document.querySelector('.warning-text');
-    if(warningText){
-        warningText.classList.add('none');
-    }
+const hideWarningText = (warningDivId) => {
+    const warningDiv = document.querySelector(`#${warningDivId}`);
+    warningDiv.classList.add('none');
+}
+const renderDay = (dates) => {
+    const dayBlock = document.querySelector('#day-block-container');
+    dates.forEach((element, index) => {
+        const dayEle = document.createElement('calcite-block');
+        const dayBlockId = `day-${index+1}-block`;
+        dayEle.setAttribute('collapsible', '');
+        dayEle.setAttribute('heading', `Day ${index+1} ,  ${element}`);
+        dayEle.setAttribute('id', dayBlockId);
+        dayEle.addEventListener('click', () => {
+            closeOtherDayBlcoks(dayEle);
+            hideWarningText('warning-day');
+        })
+        dayBlock.appendChild(dayEle);
+        renderSiteList(dayBlockId);
+    })
+}
+const closeOtherDayBlcoks = (dayBlcokOpened) => {
+    const allDayBlock = document.querySelectorAll('calcite-block'); 
+    const dayBlockToBeClosed = Array.from(allDayBlock).filter(dayBlock => dayBlock !== dayBlcokOpened);
+    dayBlockToBeClosed.forEach(dayBlock => {
+        const hasOpenAttribute = dayBlock.hasAttribute('open');
+        if(hasOpenAttribute){
+            dayBlock.removeAttribute('open');
+        }
+    })
+}
+const renderSiteList = (dayBlockId) => {
+    const dayBlock = document.querySelector(`#${dayBlockId}`);
+    const day = dayBlockId.match(/\d+/)[0];
+    const listEle = document.createElement('calcite-list');
+    listEle.setAttribute('id', `day-${day}-list`);
+    dayBlock.appendChild(listEle);
+    Object.values(GLOBAL_SITE_TAG_LIST).forEach(tagName => {
+        const siteGroup = document.createElement('calcite-list-item-group');
+        siteGroup.setAttribute('heading', tagName);
+        const day = parseInt(dayBlockId.match(/\d+/)[0]);
+        siteGroup.setAttribute('class', `day-${day}-group`);
+        listEle.appendChild(siteGroup);
+    })
 }
 
 
@@ -306,15 +350,24 @@ class SiteInputController {
         disableSiteItemSelected(siteData.siteId);
     }
 }
+class DayController {
+    static async ready(dateData) {
+        const GLOBAL_DATES = getDate(dateData);
+        renderDay(GLOBAL_DATES);
+        // GLOBAL_DATES.forEach((element, index) => {
+        //     SiteController.ready()
+        // })
+    }
+}
 class SiteController {
     static ready(siteData){
-        renderSite(siteData.siteId);
+        renderSite(siteData.site);
     }
 }
 class MapController {
-    static async ready(city, siteIdList){
+    static async ready(city, siteData){
         const TB = await fetchTB();
-        renderMap(TB, city, siteIdList);
+        renderMap(TB, city, siteData);
     }
 }
 
@@ -331,22 +384,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cityId = tripData.city.id;
     await SiteInputController.ready(cityId, siteData);
     //
+    DayController.ready(tripData.date);
+    //
     SiteController.ready(siteData);
     //
     const siteInput = document.querySelector('#site-input');
     siteInput.addEventListener('calciteComboboxChange', () => {
         if(siteInput.value){
-            const siteSelected = JSON.parse(siteInput.value);
-            addSiteToStorage(siteSelected);
-            disableSiteItemSelected([siteSelected.id]);
-            addToList(siteSelected.id);
-            removeValueInInput();
-            renderMapMarker([siteSelected.id]);
-            hideWarningText();
+            const dayBlockOpened = getDayBlockOpened()[0];
+            if(dayBlockOpened){
+                const day = parseInt(dayBlockOpened.getAttribute('id').match(/\d+/)[0]);
+                const siteSelected = JSON.parse(siteInput.value);
+                addSiteToStorage(siteSelected, day);
+                addToList(siteSelected.id, day);
+                disableSiteItemSelected([siteSelected.id]);
+                removeValueInInput();
+                renderMapMarker([siteSelected.id]);
+                hideWarningText('warning-site');
+            }
+            else{
+                showWarningText('Please select a day', 'warning-day');
+            }
         }
     })
     //
     renderPageButton();
     //
-    await MapController.ready(tripData.city, siteData.siteId);
+    await MapController.ready(tripData.city, siteData.site);
 })

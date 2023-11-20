@@ -34,4 +34,21 @@ tripAPI.post('/api/trip', async (req, res) => {
     }
 })
 
+
+tripAPI.get('/api/trip/', async (req, res) => {
+    try{
+        const tripNumber = req.query.number;
+        const trip = await tripController.getTrip(tripNumber);
+        res.status(200).json({
+            ok: true,
+            trip: trip
+        });
+    }
+    catch(error){
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+})
+
 module.exports = tripAPI;

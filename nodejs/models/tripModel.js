@@ -26,7 +26,7 @@ const Trip = db.define('Trip', {
         timestamps: false
     }
 );
-Trip.belongsTo(City, { foreignKey: 'city_id', as: 'City' });
+Trip.belongsTo(City, { foreignKey: 'city_id', as: 'city' });
 
 module.exports = Trip;
   

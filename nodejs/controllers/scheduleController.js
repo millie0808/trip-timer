@@ -27,17 +27,21 @@ class ScheduleController {
     async mapToScheduleData(newTripJSON, tripId){
         try{
             // 檢查必要的資料是否存在
-            if (!newTripJSON || !newTripJSON.sites || newTripJSON.sites == [] || !tripId) {
+            if (!newTripJSON || !newTripJSON.site || newTripJSON.site == {} || !tripId) {
                 throw new Error('Bad Request. Please provide valid data.');
             }
-            const scheduleDataList = [];
-            newTripJSON.sites.forEach(siteId => {
-                const scheduleData = {
-                    trip_id: tripId,
-                    site_id: siteId
+            let scheduleDataList = [];
+            for(const day in newTripJSON.site){
+                for(let i=0;i<newTripJSON.site[day].length;i++){
+                    const scheduleData = {
+                        trip_id: tripId,
+                        site_id: newTripJSON.site[day][i],
+                        day_order: day,
+                        site_order: i
+                    }
+                    scheduleDataList.push(scheduleData);
                 }
-                scheduleDataList.push(scheduleData);
-            })
+            }
             return scheduleDataList;
         }
         catch(error){

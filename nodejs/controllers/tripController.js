@@ -1,14 +1,20 @@
 const Trip = require('../models/tripModel');
-const cityController = require('./cityController');
-
+const City = require('../models/cityModel');
 class TripController {
-    async getAllTrips() {
+    async getTrip(tripNumber) {
         try {
-            const trips = await Trip.findAll();
-            return trips;
+            const trip = await Trip.findOne({
+                where: { number: tripNumber },
+                include: {
+                    model: City,
+                    as: 'city',
+                    attributes: ['name_eng', 'country_eng']
+                }
+            });
+            return trip;
         } 
         catch (error) {
-            console.error('Error retrieving trips:', error);
+            console.error('Error retrieving trip:', error);
             throw error;
         }
     }

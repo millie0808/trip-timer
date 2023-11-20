@@ -7,13 +7,13 @@ if(!tripData){
 else{
     document.querySelector('body').classList.remove('none');
     if(!siteData){
-        localStorage.setItem('siteData', JSON.stringify({'cityId': tripData.city.id}));
+        localStorage.setItem('siteData', JSON.stringify({'cityId': tripData.city.id, 'site': {}}));
     }
     // 如果重新選了城市，local storage 就刪除原先的 siteData，建立新的
     else{
         if(siteData.cityId != tripData.city.id){
             localStorage.removeItem('siteData');
-            localStorage.setItem('siteData', JSON.stringify({'cityId': tripData.city.id}));
+            localStorage.setItem('siteData', JSON.stringify({'cityId': tripData.city.id, 'site': {}}));
         }
     }
 }

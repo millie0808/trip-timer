@@ -12,3 +12,8 @@
 .warning-text{
     color: #DD524C;
 }
+
+#map{
+    width: 100%;
+    height: 100%;
+}
