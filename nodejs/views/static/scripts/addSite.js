@@ -150,6 +150,7 @@ const addToList = (siteId, day) => {
     const siteGroup = document.querySelector(`.day-${day}-group[heading='${tagName}']`);
     const siteEle = document.createElement('calcite-list-item');
     siteEle.setAttribute('label', site.name);
+    siteEle.setAttribute('value', site.id);
     if(site.address != 'null'){
         siteEle.setAttribute('description', site.address);
     }
@@ -182,12 +183,13 @@ const observerForDeletingSite = new MutationObserver(mutationsList => {
     for (let mutation of mutationsList) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'closed') {
             const siteDeleted = mutation.target;
+            const siteIdDeleted = siteDeleted.getAttribute('value');
             const siteNameDeleted = siteDeleted.getAttribute('label');
             enableSiteItemDeleted(siteNameDeleted);
             const dayBlcokOpened = getDayBlockOpened()[0];
             const day = parseInt(dayBlcokOpened.getAttribute('id').match(/\d+/)[0]);
             deleteSiteFromStorage(siteNameDeleted, day);
-            renderDeletingMapMarker(siteNameDeleted);
+            renderDeletingMapMarker(siteIdDeleted);
         }
     }
 });
@@ -260,8 +262,7 @@ const renderMapMarker = (siteIdList) => {
         });
     })
 }
-const renderDeletingMapMarker = (siteName) => {
-    const siteId = GLOBAL_SITES.find(site => site.name === siteName).id;
+const renderDeletingMapMarker = (siteId) => {
     const markerId = 'siteMarker'+siteId.toString();
     GLOBAL_MAP.removeLayer(markerId);
     GLOBAL_MAP.removeSource(markerId);
