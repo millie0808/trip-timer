@@ -30,7 +30,7 @@ tripForm.addEventListener('submit', async (event) => {
     // 檢查資料
     if(!cityInput.value || !datePicker.value){
         if(!cityInput.value){
-            cityWarning.classList.remove('none');
+            return false;
         }
         if(!datePicker.value){
             dateWarning.classList.remove('none');

@@ -83,6 +83,12 @@ const getDayBlockOpened = () => {
     const allDayBlock = document.querySelectorAll('calcite-block');
     return Array.from(allDayBlock).filter(dayBlock => dayBlock.hasAttribute('open'));
 }
+const preventInputSubmit = () => {
+    const siteForm = document.querySelector('#site-form');
+    siteForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+    })
+}
 
 // Views
 const renderSiteInput = (sites) => {
@@ -114,7 +120,7 @@ const renderSiteInput = (sites) => {
         const shadow = siteInput.shadowRoot;
         const parentDiv = shadow.querySelector('div[role=combobox]');
         observerForClosingSiteInput.observe(parentDiv, { attributes: true, attributeOldValue: true });
-    }, 300);
+    }, 350);
 }
 const renderTitle = (cityName) => {
     const titleCitySpan = document.querySelector('#title_city-name');
@@ -278,7 +284,7 @@ const renderPageButton = () => {
         event.preventDefault();
         const tripData = JSON.parse(localStorage.getItem('tripData'));
         const siteData = JSON.parse(localStorage.getItem('siteData'));
-        if(!siteData.site || siteData.site == {}){
+        if(!siteData.site || Object.keys(siteData.site).length === 0){
             showWarningText('Please select at least one spot', 'warning-site');
         }
         else{
@@ -373,6 +379,8 @@ class MapController {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    preventInputSubmit();
+    //
     const tripData = JSON.parse(localStorage.getItem('tripData'));
     const siteData = JSON.parse(localStorage.getItem('siteData')) || {};
     if (!siteData.hasOwnProperty('siteId')) {
