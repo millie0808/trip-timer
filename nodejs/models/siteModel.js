@@ -1,13 +1,22 @@
 const { DataTypes } = require('sequelize');
-const db = require('../database/connection');
-const City = require('./cityModel');
-const SiteTag = require('./siteTagModel');
+const db = require('../database/mysqlConnection');
 
-const Site = db.define('Site', {
+const Site = db.define('site', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
+        },
+        google_id: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            indexes: [
+                {
+                    unique: true,
+                    fields: ['google_id'],
+                    using: 'HASH',
+                },
+            ]
         },
         name: {
             type: DataTypes.STRING(255),
@@ -29,7 +38,5 @@ const Site = db.define('Site', {
         timestamps: false
     }
 );
-Site.belongsTo(City, { foreignKey: 'city_id' });
-Site.belongsTo(SiteTag, { foreignKey: 'tag_id' });
 
 module.exports = Site;

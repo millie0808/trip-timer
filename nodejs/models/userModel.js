@@ -1,43 +1,39 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/mysqlConnection');
 
-const City = db.define('city', {
+const User = db.define('user', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
-        google_id: {
+        name: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        email: {
             type: DataTypes.STRING(255),
             allowNull: false,
             unique: true,
             indexes: [
                 {
                     unique: true,
-                    fields: ['google_id'],
+                    fields: ['email'],
                     using: 'HASH',
                 },
             ]
         },
-        name: {
+        password: {
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        country: {
+        avatar: {
             type: DataTypes.STRING(255),
         },
-        lat: {
-            type: DataTypes.FLOAT(17, 14),
-            allowNull: false,
-        },
-        lng: {
-            type: DataTypes.FLOAT(17, 14),
-            allowNull: false,
-        }
     }, {
-        tableName: 'city',
-        timestamps: false
+        tableName: 'user',
     }
 );
 
-module.exports = City;
+module.exports = User;
+  

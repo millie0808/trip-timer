@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const db = require('../database/connection');
+const db = require('../database/mysqlConnection');
 const Trip = require('./tripModel');
 const Site = require('./siteModel');
 
@@ -9,15 +9,18 @@ const Schedule = db.define('Schedule', {
             primaryKey: true,
             autoIncrement: true,
         },
-        description: {
-            type: DataTypes.STRING(255),
-        },
         day_order: {
             type: DataTypes.INTEGER,
         },
         site_order: {
             type: DataTypes.INTEGER,
         },
+        duration: {
+            type: DataTypes.INTEGER,
+        },
+        mode: {
+            type: DataTypes.STRING(255),
+        }
     }, {
         tableName: 'schedule',
         timestamps: false
