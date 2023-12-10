@@ -33,7 +33,13 @@ const City = db.define('city', {
         lng: {
             type: DataTypes.FLOAT(17, 14),
             allowNull: false,
-        }
+        },
+        img: {
+            type: DataTypes.STRING(255),
+        },
+        continent: {
+            type: DataTypes.STRING(255),
+        },
     }, {
         tableName: 'city',
         timestamps: false
