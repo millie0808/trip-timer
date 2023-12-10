@@ -1,5 +1,5 @@
 # 使用官方 Node.js 基礎映像
-FROM --platform=linux/amd64 node:18.17.1
+FROM --platform=linux/amd64 node:alpine
 
 # 設定工作目錄
 WORKDIR /app
