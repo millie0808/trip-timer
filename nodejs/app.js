@@ -33,12 +33,10 @@ app.get('/community', (req, res) => {
 
 const cityAPI = require('./api/cityAPI');
 const tripAPI = require('./api/tripAPI');
-const siteAPI = require('./api/siteAPI');
 const scheduleAPI = require('./api/scheduleAPI');
 const userAPI = require('./api/userAPI');
 app.use('/', cityAPI);
 app.use('/', tripAPI);
-app.use('/', siteAPI);
 app.use('/', scheduleAPI);
 app.use('/', userAPI);
 
