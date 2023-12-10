@@ -25,7 +25,6 @@ const User = db.define('user', {
         },
         password: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         avatar: {
             type: DataTypes.STRING(255),
