@@ -1,10 +1,11 @@
 <%- include('./partials/head.ejs') %>
-
-<!-- <link rel="stylesheet" type="text/css" href="/styles/new_trip.css"> -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="757303728424-p8ombhlemfmjj8no4uoo6as9543koh4n.apps.googleusercontent.com">
+<link rel="stylesheet" type="text/css" href="/styles/base.css">
 
 <%- include('./partials/nav.ejs') %>
 
-<main class="mb-12 w-full flex-grow">
+<main class="hidden mb-12 w-full flex-grow">
     <div class="relative z-[30] mt-24 h-auto w-full lg:absolute lg:h-[46.5vw] xl:mt-20 2xl:mt-24">
         <main class="mx-auto max-w-7xl px-4 pt-10 sm:px-6 sm:pt-12 md:pt-16 lg:px-8 lg:pt-10 xl:pt-28">
             <div class="sm:text-center lg:text-left">
@@ -19,9 +20,9 @@
                 </p>
                 <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                     <div class="rounded-md shadow">
-                        <a class="flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-background bg-violet-400/75 text-white hover:bg-violet-700/50 md:px-10 md:py-4 md:text-lg" href="/trip/new">
+                        <button class="start-btn flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-background bg-violet-700/50 text-white hover:bg-violet-400/75 md:px-10 md:py-4 md:text-lg">
                             Start Planning
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -29,8 +30,9 @@
     </div>
 </main>
 
-<%- include('./partials/footer.ejs') %>
 
-<script type="module" src="/scripts/index.js"></script>   
+<%- include('./partials/footer.ejs') %>
+<script src="/scripts/log.js"></script>   
+<script src="/scripts/index.js"></script>   
 </body>
 </html>

@@ -1,6 +1,6 @@
 </head>
 <body>
-    <nav class="fixed top-0 z-50 mx-auto flex w-full items-center justify-between border-b border-solid border-transparent px-6 py-[1.1rem] transition-all lg:px-8 lg:py-0" aria-label="Global">
+    <nav class="fixed top-0 z-50 mx-auto flex w-full items-center justify-between border-b border-solid border-transparent px-6 py-[1.1rem] transition-all lg:px-8 lg:py-0 bg-white" aria-label="Global">
         <div class="mx-auto flex w-full max-w-screen-xl items-center justify-between">
             <div class="flex items-center gap-8">
                 <a aria-current="page" class="flex gap-2 active" href="/">
@@ -10,18 +10,164 @@
                 <nav class="hidden lg:block">
                     <ul class="flex items-center gap-2">
                         <li>
-                            <a class="my-auto rounded-full border-b-2 border-solid border-transparent px-4 py-1 font-medium text-primary transition-all hover:scale-120 hover:bg-primary hover:text-indigo-500" href="/trip/new" >
+                            <button id="start-btn-on-nav" class="start-btn my-auto rounded-full border-b-2 border-solid border-transparent px-4 py-1 font-medium text-primary transition-all hover:scale-120 hover:bg-primary hover:text-indigo-500" >
                                 Start Planning
-                            </a>
+                            </button>
                         </li>
                         <li>
-                            <a class="my-auto rounded-full border-b-2 border-solid border-transparent px-4 py-1 font-medium text-primary transition-all hover:scale-120 hover:bg-primary hover:text-indigo-500" href="/trip/new" >
+                            <a class="my-auto rounded-full border-b-2 border-solid border-transparent px-4 py-1 font-medium text-primary transition-all hover:scale-120 hover:bg-primary hover:text-indigo-500" href="/community">
                                 Community trips
                             </a>
                         </li>
                         <li class="px-3 py-[1.1rem] opacity-0">.</li>
                     </ul>
                 </nav>
+            </div>
+            <div>
+                <button id="nav-sign-in-btn" class="hidden sign-in-btn my-auto rounded-full border-b-2 border-solid border-transparent px-4 py-1 font-medium text-primary transition-all hover:scale-120 hover:bg-primary hover:text-indigo-500" >
+                    Login
+                </button>
+                <div class="lg:flex">
+                    <div class="relative inline-block text-left">
+                        <div class="flex justify-center overflow-hidden relative">
+                            <button>
+                                <img id="nav-avatar" class="hidden inline-block rounded-full w-10 h-10 ring-2 ring-white">
+                            </button>
+                        </div>
+                        <div class="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-100 scale-100">
+                            <div class="py-1">
+                                <button id="member-btn" class="hidden text-gray-700 flex w-full items-center gap-2 px-4 py-2 text-left text-sm">
+                                    <p class="whitespace-nowrap">Your Trips</p>
+                                </button>
+                                <button id="sign-out-btn" class="hidden text-gray-700 flex w-full items-center gap-2 px-4 py-2 text-left text-sm">
+                                    <p class="whitespace-nowrap">Logout</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sign-in-container" class="hidden fixed top-0 left-0 w-full h-full justify-center items-center bg-white bg-opacity-70 z-50">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                <div class="relative">
+                    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-indigo-50 rounded-lg">
+                        <button class="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 focus:outline-none" id="close-sign-in">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+                        </div>
+                        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                            <form id="sign-in-form" class="space-y-6">
+                                <div>
+                                    <label for="sign-in-email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                                    <div class="mt-2">
+                                    <input id="sign-in-email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div id="sign-in-email-warning" class="flex justify-center hidden">
+                                        <p class="warning-text text-center">Email not registered</p>
+                                    </div>
+                                </div>
+                            
+                                <div>
+                                    <div class="flex items-center justify-between">
+                                    <label for="sign-in-password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                                    </div>
+                                    <div class="mt-2">
+                                    <input id="sign-in-password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div id="sign-in-password-warning" class="flex justify-center hidden">
+                                        <p class="warning-text text-center">Password incorrect</p>
+                                    </div>
+                                </div>
+                            
+                                <div>
+                                    <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
+                                </div>
+                            </form>
+                        
+                            <p class="mt-5 text-center text-sm text-gray-500">
+                            Not a member?
+                            <button id="sign-up-btn" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign Up</button>
+                            </p>
+                            <div class="mx-auto mt-6 max-w-2xl border-t border-gray-200 pt-8 sm:mt-6 sm:pt-8 lg:mx-0 lg:max-w-none">
+                                <button id="google-sign-in-btn"  data-onsuccess="onSignIn" class="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    <img src="/images/google.png" alt="" class="w-5 h-5 mr-2">
+                                    Continue with Google
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sign-up-container" class="hidden fixed top-0 left-0 w-full h-full justify-center items-center bg-white bg-opacity-70 z-50">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                <div class="relative">
+                    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-indigo-50 rounded-lg">
+                        <button class="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full p-2 focus:outline-none" id="close-sign-up">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                            <h2 class="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign Up for a New Account</h2>
+                        </div>
+                        <form id="sign-up-form" class="space-y-6">
+                        <div class="mt-5 flex justify-center overflow-hidden relative">
+                            <img id="avatarPreview" class="inline-block h-20 w-20 rounded-full ring-2 ring-white" src="/images/user.png" alt="">
+                            <label for="avatar-input" class="w-4 h-4 cursor-pointer absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-white rounded-full p-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v4H5a1 1 0 100 2h4v4a1 1 0 102 0v-4h4a1 1 0 100-2h-4V4a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                <input id="avatar-input" type="file" name="avatar" accept="image/*" value="" style="display: none;">
+                            </label>
+                        </div>
+                        <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+                        
+                            <div>
+                                <label for="sign-up-name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                                <div class="mt-2">
+                                <input id="sign-up-name" name="name" type="text" autocomplete="name" required class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="sign-up-email" class="mt-2 block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                                <div class="mt-2">
+                                <input id="sign-up-email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                                <div id="sign-up-email-warning" class="flex justify-center hidden">
+                                    <p class="warning-text text-center">Email already registered</p>
+                                </div>
+                            </div>
+                        
+                            <div>
+                                <div class="flex items-center justify-between">
+                                <label for="sign-up-password" class="mt-2 block text-sm font-medium leading-6 text-gray-900">Password</label>
+                                </div>
+                                <div class="mt-2">
+                                <input id="sign-up-password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+                        
+                            <div class="mt-6">
+                                <button id="sign-up-submit" type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign Up</button>
+                            </div>
+                        
+                        
+                            <p class="mt-10 text-center text-sm text-gray-500">
+                            Already have an account?
+                            <button class="sign-in-btn font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign In</button>
+                            </p>
+                        </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

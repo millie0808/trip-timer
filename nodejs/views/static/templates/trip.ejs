@@ -2,6 +2,7 @@
 
     <script type="module" src=https://js.arcgis.com/calcite-components/1.10.0/calcite.esm.js></script>
     <link rel="stylesheet" type="text/css" href=https://js.arcgis.com/calcite-components/1.10.0/calcite.css />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfcgUuaRdlfkJiGDxuXLGORQ07D-6zqls&libraries=places"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" type="text/css" href="/styles/base.css">
@@ -25,54 +26,40 @@
                         </button>
                     </div>
                 </header>
-                <form class="relative flex h-full flex-grow flex-col">
+                <div class="relative flex h-full flex-grow flex-col">
                     <div class="flex-grow px-3 pb-52 md:px-12">
                         <div class="my-8">
                             <div>
-                                <div class="hidden flex-col justify-start gap-4 md:flex">
+                                <div class="hidden flex-col justify-start gap-2 md:flex">
                                     <h2 class="w-fit text-center text-2xl font-medium md:text-start md:text-3xl">
                                         <span class="none" id="title">
-                                            <span id="title_city-name"></span>
+                                            <span id="title_trip-name"></span>
                                         </span>
                                     </h2>
-                                    <p class="mb-6 text-base text-blue-gray-300 md:mt-5 md:text-start md:text-lg">
+                                    <p id="title_city-name" class="text-base"></p>
+                                    <p class="mb-3 text-base text-blue-gray-300 md:text-start md:text-lg">
                                         <span>
                                             <span id="title_date"></span>
                                         </span>
                                     </p>
                                 </div>
                             </div>
-                            <div id="day-block-container">
-                                <calcite-block collapsible heading="Day 1 ,  2023-11-09">
-                                    <calcite-list drag-enabled>
-                                        <calcite-list-item label="愛河之心" description="高雄市807三民區博愛一路和同盟一路、二路">
-                                        </calcite-list-item>
-                                        <calcite-list-item label="高雄展覽館" description="高雄市806前鎮區成功二路39號">
-                                        </calcite-list-item>
-                                    </calcite-list>
-                                </calcite-block>
-                                <calcite-block collapsible heading="Day 2 ,  2023-11-10">
-                                    
-                                </calcite-block>
-                                <calcite-block collapsible heading="Day 3 ,  2023-11-11">
-                                    
-                                </calcite-block>
-                            </div>
+                            <calcite-panel id="day-block-container">
+                                
+                            </calcite-panel>
                         </div>
                     </div>
-                    <!-- <footer class="fixed bottom-0 z-[55] mt-12 flex w-full flex-col border-t border-solid border-gray-200 bg-white shadow-[0px_-10px_28px_0px_rgba(0,0,0,0.07)] md:shadow-[-2px_18px_48px_74px_rgba(255,255,255,0.6)] lg:w-[52%]" style="opacity: 1; transform: none;">
+                    <footer class="fixed bottom-0 z-[55] mt-12 flex w-full flex-col border-t border-solid border-gray-200 bg-white shadow-[0px_-10px_28px_0px_rgba(0,0,0,0.07)] md:shadow-[-2px_18px_48px_74px_rgba(255,255,255,0.6)] lg:w-[52%]" style="opacity: 1; transform: none;">
                         <div class="flex flex-wrap items-end justify-end gap-2 px-3 py-4 text-lg md:items-end md:px-12 md:py-8 md:text-xl">
-                            <div class="flex w-full items-center justify-between gap-2 md:w-fit">
-                                <button id="back-btn" class="flex items-center gap-2 rounded-full px-4 py-1.5 text-base text-blue-gray-200 md:text-lg hover:bg-violet-400 hover:text-white">
-                                    Back
-                                </button>
-                                <button id="next-btn" class="ml-auto flex items-center gap-2 rounded-full px-4 py-1.5 text-base text-indigo-500 md:text-lg bg-tp-purple-2 hover:bg-violet-400 hover:text-white">
-                                    Build
-                                </button>
-                            </div>
+                            <button id="delete-btn" class="flex items-center gap-2 rounded-full px-4 py-1.5 text-base text-red-600 md:text-lg hover:bg-red-700/90 hover:text-white">
+                                Delete
+                            </button>
+                            <button id="save-btn" class="ml-auto flex items-center gap-2 rounded-full px-4 py-1.5 text-base text-indigo-500 md:text-lg bg-tp-purple-2 hover:bg-violet-400 hover:text-white">
+                                Save
+                            </button>
                         </div>
-                    </footer> -->
-                </form>
+                    </footer>
+                </div>
             </div>
         </section>
         <section class="fixed right-0 top-0 z-[60] h-screen w-full overflow-hidden border-l  border-solid border-gray-200 transition-transform lg:w-[48%]  translate-x-full md:block lg:translate-x-0">
@@ -80,6 +67,27 @@
                 <div id='map'></div>
             </div>
         </section>
+        <div  class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[70] bg-white p-8 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-bold mb-4">Saved successfully</h1>
+            <div class="flex justify-center">
+                <button class="flex w-4 h-4 items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-background bg-violet-400/75 text-white hover:bg-violet-700/50 md:px-10 md:py-4 md:text-lg">OK</button>
+            </div>
+        </div>
+        <div id="save-ok" class="hidden fixed inset-0 z-[70] w-screen overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div id="modal-box" class=" sm:min-w-[20vw] flex flex-col items-center gap-2 -translate-y-1/2 p-6 rounded-lg top-1/2 left-1/2 -translate-x-1/2 absolute shadow-xl bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-[#059669] mx-auto h-11 rounded-full bg-[#D1FAE5] w-11" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-lg font-medium border-t-[15px] border-transparent border-b-[18px]">Saved Successfully</span>
+                    <div class="flex gap-2 w-full">
+                        <button id="save-ok-btn" class="p-3 bg-[#4F46E5] rounded-lg w-full text-white">Continue</button>
+                        <button id="save-done-btn" class="p-3 bg-[#4F46E5] rounded-lg w-full text-white">Done</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
     </div>
     <script type="module" src="/scripts/trip.js"></script>
 </body>

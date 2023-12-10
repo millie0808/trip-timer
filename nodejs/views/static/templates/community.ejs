@@ -1,0 +1,23 @@
+<%- include('./partials/head.ejs') %>
+
+<link rel="stylesheet" type="text/css" href="/styles/base.css">
+
+<%- include('./partials/nav.ejs') %>
+
+<main class="mb-12 w-full flex-grow">
+    <div class="mx-auto max-w-screen-xl px-4 pt-24 md:px-12">
+        <section>
+            <h2 class="text-center text-3xl font-medium md:mt-5 md:text-4xl">Trip finder</h2>
+            <p class="mt-3 text-center">Find trips created by other users and get inspired for your next trip!</p>
+            <div id="trips-container" class="mt-10 grid grid-cols-1 gap-8 pb-20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                
+            </div>
+        </section>
+    </div>
+</main>
+
+<%- include('./partials/footer.ejs') %>
+<script src="/scripts/log.js"></script> 
+<script src="/scripts/community.js"></script> 
+</body>
+</html>

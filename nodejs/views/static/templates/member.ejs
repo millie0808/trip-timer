@@ -1,0 +1,31 @@
+<%- include('./partials/head.ejs') %>
+
+<link rel="stylesheet" type="text/css" href="/styles/base.css">
+
+<%- include('./partials/nav.ejs') %>
+
+<main class="mx-auto mt-12 w-full max-w-screen-xl flex-grow pt-12">
+    <div class="px-6"> 
+        <div class="w-full">
+            <div class="mb-5 flex w-full flex-wrap gap-7 md:mb-8 md:mt-5">
+                <h2 class="items-center text-xl/10 font-medium md:text-2xl/10">
+                    Your trips
+                </h2>
+                <div class="flex items-center gap-2">
+                    <button class="start-btn flex items-center gap-2 whitespace-nowrap rounded-full bg-violet-700/50 hover:bg-violet-400/75 px-3 py-2 text-[14px] text-white md:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" stroke="white" fill="white"/></svg>
+                        New trip
+                    </button>
+                </div>
+            </div>
+            <div id="trips-container" class="grid grid-cols-1 gap-6 pb-28 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('./partials/footer.ejs') %>
+<script src="/scripts/member.js"></script> 
+</body>
+</html>

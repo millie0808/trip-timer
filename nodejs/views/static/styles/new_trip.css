@@ -2,6 +2,10 @@ calcite-input-date-picker{
     inline-size: 500px;
 }
 
-calcite-combobox{
+calcite-input{
     width: 500px;
 }
+
+/* calcite-list{
+    width: 500px;
+} */

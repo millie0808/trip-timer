@@ -1,7 +1,8 @@
 <%- include('./partials/head.ejs') %>
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@esri/calcite-components@1.0.0-beta.94/dist/calcite/calcite.esm.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@esri/calcite-components@1.0.0-beta.94/dist/calcite/calcite.css" />
+    <script type="module" src="https://js.arcgis.com/calcite-components/1.10.0/calcite.esm.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.10.0/calcite.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfcgUuaRdlfkJiGDxuXLGORQ07D-6zqls&libraries=places"></script>
     <link rel="stylesheet" type="text/css" href="/styles/base.css">
     <link rel="stylesheet" type="text/css" href="/styles/new_trip.css">
 <%- include('./partials/nav.ejs') %>
@@ -10,11 +11,20 @@
     <div class="px-6">
         <h2 class="mb-4 mt-5 text-center text-xl font-medium md:text-3xl">Plan your next adventure</h2>
         <form action="" id="trip-form" class="mb-[5rem] mt-12 flex flex-col items-center justify-center gap-14">
+            <div>
+                <div>Name your trip</div>
+                <calcite-input id="trip-name-input" placeholder="Give your trip a lovely name">
+                </calcite-input>
+            </div>
             <div id="city-container">
                 <div>Where do you want to go?</div>
-                <calcite-combobox id="city-input" placeholder="Search destination (Taiwan cities only)" selection-mode="single" max-items="7" >
-                </calcite-combobox>
+                <calcite-input id="city-input" placeholder="Search destination (cities only)">
+                </calcite-input>
+                <calcite-list id="city-results" selection-mode="single" selection-appearance="border">
+
+                </calcite-list>
                 <span class="warning-text none">Where would you like going?</span>
+                <span id="city-wrong-warning" class="warning-text none">Please select a actual city</span>
             </div>
             <div id="date-container">
                 <div>When does your trip start?</div>
