@@ -9,6 +9,8 @@ const port = 3000;
 app.use(express.json());
 app.set('views', path.join(__dirname, 'views/static'));
 app.set('view engine', 'ejs');
+const faviconPath = path.join(__dirname, 'favicon.ico');
+app.use('/favicon.ico', express.static(faviconPath));
 const staticFolderPath = path.join(__dirname, 'views/static');
 const customStaticPath = '/';
 app.use(customStaticPath, express.static(staticFolderPath));
