@@ -39,6 +39,9 @@ const Trip = db.define('Trip', {
             allowNull: false,
             defaultValue: DataTypes.NOW,
         },
+        name: {
+            type: DataTypes.STRING,
+        }
     }, {
         tableName: 'trip',
     }
